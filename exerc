@@ -1,0 +1,34 @@
+servidor
+
+import websockets
+import asyncio 
+
+async def response(websocket,path):
+    msn = await websocket.recv()
+    print(f'Mensagem recebida: {msn}')
+    await websocket.send("Mensagem recebida,xero")
+    
+start_server = websockets.serve(response, '10.4.41.67', 8080)
+asyncio.get_event_loop().run_until_complete(start_server)
+asyncio.get_event_loop().run_forever
+    
+
+
+
+
+cliente:
+
+import websockets
+import asyncio
+
+async def message():
+    async with websockets.connect("ws://10.4.41.48:8080") as socket:
+        while True:
+            msn = input("Digite uma mensagem para Sampaolli (ou digite 'sair' para encerrar): ")
+            if msn == 'sair':
+                break
+            await socket.send(msn)
+            response = await socket.recv()
+            print("Resposta de Sampaolli:", response)
+
+asyncio.get_event_loop().run_until_complete(message())
